@@ -3,4 +3,4 @@
 
 require 'estackprof'
 
-puts 'hello.'
+Estackprof::CLI.start(ARGV)

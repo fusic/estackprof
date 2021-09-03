@@ -5,9 +5,46 @@ jobs:
       - image: ruby:3.0.1
     steps:
       - checkout
+      - restore_cache:
+          name: Restore bundle cache
+          keys:
+            - bundle-{{ arch }}-{{ checksum "Gemfile" }}-{{ checksum "estackprof.gemspec" }}
+            - bundle-{{ arch }}-{{ checksum "Gemfile" }}
+            - bundle-{{ arch }}
+            - bundle
       - run:
-          name: Run the default task
-          command: |
-            gem install bundler -v 2.2.15
-            bundle install
-            bundle exec rake
+          name: Bundle Install
+          command: bundle install
+      - save_cache:
+          name: Store bundle cache
+          key: bundle-{{ arch }}-{{ checksum "Gemfile" }}-{{ checksum "estackprof.gemspec" }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: Run the command
+          command: bundle exec exe/esackprof version
+  lint:
+    docker:
+      - image: ruby:3.0.1
+    steps:
+      - run:
+          name: Rubocop
+          command: bundle exec rubocop
+  test:
+    docker:
+      - image: ruby:3.0.1
+    steps:
+      - run:
+          name: RSpec
+          command: bundle exec rspec
+workflows:
+  version: 2
+    build_and_test:
+      jobs:
+        - build
+        - lint:
+            requires:
+              - build
+        - test:
+            requires:
+              - build
