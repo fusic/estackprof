@@ -6,7 +6,17 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake', '~> 13.0'
-gem 'rspec', '~> 3.0'
-gem 'rubocop'
-gem 'rubocop-rake'
-gem 'rubocop-rspec'
+
+group :development do
+  gem 'guard-rubocop'
+  gem 'pry'
+  gem 'rubocop'
+  gem 'rubocop-rake'
+  gem 'rubocop-rspec'
+end
+
+group :test do
+  gem 'aruba', '~> 2.0.0'
+  gem 'guard-rspec'
+  gem 'rspec', '~> 3.0'
+end

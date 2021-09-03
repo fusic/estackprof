@@ -5,9 +5,24 @@ jobs:
       - image: ruby:3.0.1
     steps:
       - checkout
+      - restore_cache:
+          name: Restore bundle cache
+          keys:
+            - bundle-{{ arch }}-{{ checksum "Gemfile" }}-{{ checksum "estackprof.gemspec" }}
+            - bundle-{{ arch }}-{{ checksum "Gemfile" }}
+            - bundle-{{ arch }}
+            - bundle
       - run:
-          name: Run the default task
-          command: |
-            gem install bundler -v 2.2.15
-            bundle install
-            bundle exec rake
+          name: Bundle Install
+          command: bundle install
+      - save_cache:
+          name: Store bundle cache
+          key: bundle-{{ arch }}-{{ checksum "Gemfile" }}-{{ checksum "estackprof.gemspec" }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: Rubocop
+          command: bundle exec rubocop
+      - run:
+          name: RSpec
+          command: bundle exec rspec
