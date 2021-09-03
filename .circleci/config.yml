@@ -20,28 +20,9 @@ jobs:
           key: bundle-{{ arch }}-{{ checksum "Gemfile" }}-{{ checksum "estackprof.gemspec" }}
           paths:
             - vendor/bundle
-  lint:
-    docker:
-      - image: ruby:3.0.1
-    steps:
       - run:
           name: Rubocop
           command: bundle exec rubocop
-  test:
-    docker:
-      - image: ruby:3.0.1
-    steps:
       - run:
           name: RSpec
           command: bundle exec rspec
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - lint:
-          requires:
-            - build
-      - test:
-          requires:
-            - build
