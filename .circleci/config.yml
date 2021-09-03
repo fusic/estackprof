@@ -39,7 +39,7 @@ jobs:
           command: bundle exec rspec
 workflows:
   version: 2
-    build_and_test:
+    integration:
       jobs:
         - build
         - lint:
