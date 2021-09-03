@@ -39,12 +39,12 @@ jobs:
           command: bundle exec rspec
 workflows:
   version: 2
-    build_and_test:
-      jobs:
-        - build
-        - lint:
-            requires:
-              - build
-        - test:
-            requires:
-              - build
+  build_and_test:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
