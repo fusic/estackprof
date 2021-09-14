@@ -8,6 +8,9 @@
 /vendor/bundle/
 Gemfile.lock
 
+/example/vendor/bundle/
+/example/bundle/
+
 # rspec failure tracking
 .rspec_status
 

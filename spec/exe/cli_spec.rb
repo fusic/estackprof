@@ -37,11 +37,11 @@ RSpec.describe 'estackprof command', type: :aruba do
         GC: 5 (12.50%)
       ==================================
            TOTAL    (pct)     SAMPLES    (pct)     FRAME
-              13  (32.5%)          13  (32.5%)     Enumerable#to_a
-               6  (15.0%)           6  (15.0%)     File.expand_path
-               5  (12.5%)           5  (12.5%)     (sweeping)
-               3   (7.5%)           3   (7.5%)     File.exist?
-               3   (7.5%)           3   (7.5%)     TCPSocket#initialize
+              13  (32.5%)          13  (32.5%)     Enumerable#to_a(<cfunc>:)
+               6  (15.0%)           6  (15.0%)     File.expand_path(<cfunc>:)
+               5  (12.5%)           5  (12.5%)     (sweeping)(:)
+               3   (7.5%)           3   (7.5%)     File.exist?(<cfunc>:)
+               3   (7.5%)           3   (7.5%)     TCPSocket#initialize(<cfunc>:)
     EXPECTED
 
     before do
