@@ -3,7 +3,7 @@
 require 'stackprof'
 
 module Estackprof
-  def top(files)
+  def top(files:)
     reports = files.map do |file|
       Estackprof::Report.new(Marshal.load(IO.binread(file)))
     end
@@ -13,6 +13,8 @@ module Estackprof
     report.print_text(limit: 20, out: io)
     io.rewind
     "#{io.read}\n"
+  rescue StandardError
+    puts 'Dump files are missing or incorrect.'
   end
 
   module_function :top
