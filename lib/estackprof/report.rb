@@ -4,11 +4,16 @@ require 'stackprof'
 
 module Estackprof
   class Report < StackProf::Report
-    def print_text(sort_by_total: false, limit:, out: $stdout)
+    def print_text(limit:, pattern:, sort_by_total: false, out: $stdout)
       print_summary(out)
       print_header(out)
 
       list = frames(sort_by_total)
+      if pattern
+        list = list.filter do |_frame, info|
+          %i[file name].any? { |s| info[s].match?(pattern) }
+        end
+      end
       list = list.first(limit) if limit
       print_body(list, out)
     end

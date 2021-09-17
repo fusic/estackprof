@@ -12,9 +12,12 @@ module Estackprof
 
     desc 'top [..files]', 'Report to top of methods'
     option :limit
+    option :pattern
     def top(*files)
-      limit = options[:limit].to_i || 10
-      puts Estackprof.top(files: files.empty? ? Dir.glob('./tmp/*.dump') : files, limit: limit)
+      puts Estackprof.top(
+        files: files.empty? ? Dir.glob('./tmp/*.dump') : files,
+        options: options
+      )
       exit
     rescue StandardError => e
       output_error_if_debug_mode(e)
