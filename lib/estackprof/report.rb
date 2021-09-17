@@ -50,7 +50,11 @@ module Estackprof
 
     def frame(name, file, line)
       file_path = name
-      file_path += "(#{file}:#{line})" if file != '<cfunc>'
+      begin
+        file_path += "(#{Pathname(file).relative_path_from(Dir.pwd)}:#{line})"
+      rescue StandardError
+        # NOP
+      end
       file_path
     end
   end
