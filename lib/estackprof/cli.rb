@@ -11,8 +11,10 @@ module Estackprof
     class_option :debug, type: :boolean, aliases: '-d', desc: 'debug mode'
 
     desc 'top [..files]', 'Report to top of methods'
+    option :limit
     def top(*files)
-      puts Estackprof.top(files: files.empty? ? Dir.glob('./tmp/*.dump') : files)
+      limit = options[:limit].to_i || 10
+      puts Estackprof.top(files: files.empty? ? Dir.glob('./tmp/*.dump') : files, limit: limit)
       exit
     rescue StandardError => e
       output_error_if_debug_mode(e)

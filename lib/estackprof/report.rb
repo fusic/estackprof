@@ -4,7 +4,7 @@ require 'stackprof'
 
 module Estackprof
   class Report < StackProf::Report
-    def print_text(sort_by_total: false, limit: nil, out: $stdout)
+    def print_text(sort_by_total: false, limit:, out: $stdout)
       print_summary(out)
       print_header(out)
 
