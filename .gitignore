@@ -5,9 +5,13 @@
 /doc/
 /pkg/
 /spec/reports/
-/tmp/
 /vendor/bundle/
 Gemfile.lock
 
+/example/vendor/bundle/
+/example/bundle/
+
 # rspec failure tracking
 .rspec_status
+
+tmp

@@ -13,6 +13,8 @@ group :development do
   gem 'rubocop'
   gem 'rubocop-rake'
   gem 'rubocop-rspec'
+  gem 'sinatra'
+  gem 'webrick'
 end
 
 group :test do

@@ -10,9 +10,14 @@ module Estackprof
     class_option :version, type: :boolean, aliases: '-v', desc: 'print version.'
     class_option :debug, type: :boolean, aliases: '-d', desc: 'debug mode'
 
-    desc 'fizzbuzz [limit]', 'Get fizzbuzz result from limit number'
-    def fizzbuzz(limit)
-      puts Estackprof.fizzbuzz(limit).join(',')
+    desc 'top [..files]', 'Report to top of methods'
+    option :limit
+    option :pattern
+    def top(*files)
+      puts Estackprof.top(
+        files: files.empty? ? Dir.glob('./tmp/*.dump') : files,
+        options: options
+      )
       exit
     rescue StandardError => e
       output_error_if_debug_mode(e)

@@ -13,9 +13,9 @@ RSpec.describe 'estackprof command', type: :aruba do
   context 'with help option' do
     expected = <<~EXPECTED
       Commands:
-        estackprof fizzbuzz [limit]  # Get fizzbuzz result from limit number
-        estackprof help [COMMAND]    # Describe available commands or one specific ...
-        estackprof version           # version
+        estackprof help [COMMAND]  # Describe available commands or one specific co...
+        estackprof top [..files]   # Report to top of methods
+        estackprof version         # version
 
       Options:
         -h, [--help], [--no-help]        # help message.
@@ -29,17 +29,31 @@ RSpec.describe 'estackprof command', type: :aruba do
     it { expect(last_command_started).to have_output(expected) }
   end
 
-  context 'when fizzbuzz subcommand' do
-    expected = %w[FizzBuzz 1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz].join(',')
-    before { run_command('estackprof fizzbuzz 15') }
+  context 'when top subcommand' do
+    expected = <<~EXPECTED
+      ==================================
+        Mode: cpu(100)
+        Samples: 99 (6.60% miss rate)
+        GC: 8 (8.08%)
+      ==================================
+           TOTAL    (pct)     SAMPLES    (pct)     FRAME
+              26  (26.3%)          26  (26.3%)     Enumerable#to_a
+              23  (23.2%)          23  (23.2%)     File.expand_path
+               9   (9.1%)           9   (9.1%)     TCPSocket#initialize
+    EXPECTED
+
+    before do
+      run_command(
+        <<~CMD
+          estackprof top --limit 3\
+                         ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051311.dump\
+                         ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051312.dump\
+                         ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051313.dump
+        CMD
+      )
+    end
 
     it { expect(last_command_started).to be_successfully_executed }
     it { expect(last_command_started).to have_output(expected) }
-
-    context 'with invalid args' do
-      before { run_command('estackprof fizzbuzz a') }
-
-      it { expect(last_command_started).not_to be_successfully_executed }
-    end
   end
 end
