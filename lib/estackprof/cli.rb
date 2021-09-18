@@ -11,8 +11,8 @@ module Estackprof
     class_option :debug, type: :boolean, aliases: '-d', desc: 'debug mode'
 
     desc 'top [..files]', 'Report to top of methods'
-    option :limit
-    option :pattern
+    option :limit, aliases: '-l', desc: 'limit reports.'
+    option :pattern, aliases: '-p', desc: 'Filter reports by pattern match.'
     def top(*files)
       puts Estackprof.top(
         files: files.empty? ? Dir.glob('./tmp/*.dump') : files,
