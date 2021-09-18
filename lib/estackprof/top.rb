@@ -22,9 +22,10 @@ module Estackprof
   end
 
   def parse_options(options)
-    limit = options[:limit] ? options[:limit].to_i : 10
-    pattern = Regexp.new(options[:pattern]) if options[:pattern]
-    { limit: limit, pattern: pattern }
+    limit = options[:limit] || 10
+    pattern = options[:pattern] && Regexp.new(options[:pattern])
+    sort_by_total = options[:cumlative]
+    { limit: limit, pattern: pattern, sort_by_total: sort_by_total }
   end
 
   module_function :top, :report_from, :parse_options
