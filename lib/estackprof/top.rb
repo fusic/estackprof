@@ -7,7 +7,7 @@ module Estackprof
     io = StringIO.new
     report_from(files).print_text(**parse_options(options), out: io)
     io.rewind
-    "#{io.read}\n"
+    "#{io.read}"
   rescue StandardError
     puts 'Dump files are missing or incorrect.'
   end
