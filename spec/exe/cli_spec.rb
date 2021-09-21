@@ -150,5 +150,87 @@ EXPECTED
       it { expect(last_command_started).to be_successfully_executed }
       it { expect(last_command_started).to have_output(expected) }
     end
+
+    context 'when filtering by file name' do
+      expected = <<EXPECTED.chomp
+                                  |     1  | # frozen_string_literal: true
+                                  |     2  |#{' '}
+                                  |     3  | require 'sinatra'
+                                  |     4  | require 'json'
+                                  |     5  | require 'estackprof'
+                                  |     6  |#{' '}
+                                  |     7  | use Estackprof::Middleware
+                                  |     8  |#{' '}
+                                  |     9  | def bubble_sort(array)
+                                  |    10  |   ary = array.dup
+                                  |    11  |   pos_max = ary.size - 1
+                                  |    12  |#{' '}
+  444   (89.3%)                   |    13  |   (0...pos_max).each do |n|
+  444   (89.3%)                   |    14  |     (0...(pos_max - n)).each do |ix|
+                                  |    15  |       iy = ix + 1
+  128   (25.8%) /   128  (25.8%)  |    16  |       ary[ix], ary[iy] = ary[iy], ary[ix] if ary[ix] > ary[iy]
+  316   (63.6%) /   316  (63.6%)  |    17  |     end
+                                  |    18  |   end
+                                  |    19  |#{' '}
+                                  |    20  |   ary
+                                  |    21  | end
+                                  |    22  |#{' '}
+                                  |    23  | get '/' do
+                                  |    24  |   array = Array.new(1000) { rand(10_000) }
+  450   (90.5%)                   |    25  |   bubble_sort(array).to_s
+                                  |    26  | end
+EXPECTED
+
+      before do
+        run_command(
+          <<~CMD
+            estackprof list -f app.rb
+                            ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002995.dump\
+                            ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002996.dump\
+                            ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002997.dump
+          CMD
+        )
+      end
+
+      it { expect(last_command_started).to be_successfully_executed }
+      it { expect(last_command_started).to have_output(expected) }
+    end
+
+    context 'when filtering by method name' do
+      expected = <<~EXPECTED.chomp
+        Object#bubble_sort (/Users/yokazaki/src/github.com/fusic/estackprof/example/app.rb:9)
+          samples:   444 self (89.3%)  /    444 total (89.3%)
+          callers:
+             888  (  200.0%)  Range#each
+             444  (  100.0%)  block in <main>
+          callees (0 total):
+             888  (    Inf%)  Range#each
+          code:
+                                          |     9  | def bubble_sort(array)
+                                          |    10  |   ary = array.dup
+                                          |    11  |   pos_max = ary.size - 1
+                                          |    12  |#{' '}
+          444   (89.3%)                   |    13  |   (0...pos_max).each do |n|
+          444   (89.3%)                   |    14  |     (0...(pos_max - n)).each do |ix|
+                                          |    15  |       iy = ix + 1
+          128   (25.8%) /   128  (25.8%)  |    16  |       ary[ix], ary[iy] = ary[iy], ary[ix] if ary[ix] > ary[iy]
+          316   (63.6%) /   316  (63.6%)  |    17  |     end
+                                          |    18  |   end
+      EXPECTED
+
+      before do
+        run_command(
+          <<~CMD
+            estackprof list -m bubble
+                            ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002995.dump\
+                            ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002996.dump\
+                            ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002997.dump
+          CMD
+        )
+      end
+
+      it { expect(last_command_started).to be_successfully_executed }
+      it { expect(last_command_started).to have_output(expected) }
+    end
   end
 end
