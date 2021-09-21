@@ -2,6 +2,7 @@
 
 require_relative 'estackprof/cli'
 require_relative 'estackprof/top'
+require_relative 'estackprof/list'
 require_relative 'estackprof/version'
 require_relative 'estackprof/report'
 require_relative 'estackprof/middleware'

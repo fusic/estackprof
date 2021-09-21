@@ -14,6 +14,7 @@ RSpec.describe 'estackprof command', type: :aruba do
     expected = <<~EXPECTED
       Commands:
         estackprof help [COMMAND]  # Describe available commands or one specific co...
+        estackprof list [..files]  # Report to top of methods
         estackprof top [..files]   # Report to top of methods
         estackprof version         # version
 
@@ -47,9 +48,9 @@ RSpec.describe 'estackprof command', type: :aruba do
         run_command(
           <<~CMD
             estackprof top --limit 3\
-                          ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051311.dump\
-                          ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051312.dump\
-                          ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051313.dump
+                          ../../spec/fixtures/dump/top/stackprof-cpu-13332-1631051311.dump\
+                          ../../spec/fixtures/dump/top/stackprof-cpu-13332-1631051312.dump\
+                          ../../spec/fixtures/dump/top/stackprof-cpu-13332-1631051313.dump
           CMD
         )
       end
@@ -75,9 +76,9 @@ RSpec.describe 'estackprof command', type: :aruba do
         run_command(
           <<~CMD
             estackprof top --limit 3 --cumlative\
-                          ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051311.dump\
-                          ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051312.dump\
-                          ../../spec/fixtures/dump/case1/stackprof-cpu-13332-1631051313.dump
+                          ../../spec/fixtures/dump/top/stackprof-cpu-13332-1631051311.dump\
+                          ../../spec/fixtures/dump/top/stackprof-cpu-13332-1631051312.dump\
+                          ../../spec/fixtures/dump/top/stackprof-cpu-13332-1631051313.dump
           CMD
         )
       end
@@ -106,6 +107,42 @@ RSpec.describe 'estackprof command', type: :aruba do
         run_command(
           <<~CMD
             estackprof help top
+          CMD
+        )
+      end
+
+      it { expect(last_command_started).to be_successfully_executed }
+      it { expect(last_command_started).to have_output(expected) }
+    end
+  end
+
+  context 'when list subcommand' do
+    context 'when normal' do
+      expected = <<EXPECTED.chomp
+ 1782  (358.6%) /   444  ( 89.3%)   /Users/yokazaki/src/github.com/fusic/estackprof/example/app.rb
+ 10800  (2173.0%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/sinatra-2.1.0/lib/sinatra/base.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/stackprof-0.2.17/lib/stackprof/middleware.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-protection-2.1.0/lib/rack/protection/xss_header.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-protection-2.1.0/lib/rack/protection/path_traversal.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-protection-2.1.0/lib/rack/protection/json_csrf.rb
+  900  (181.1%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-protection-2.1.0/lib/rack/protection/base.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-protection-2.1.0/lib/rack/protection/frame_options.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-2.2.3/lib/rack/logger.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-2.2.3/lib/rack/common_logger.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-2.2.3/lib/rack/head.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-2.2.3/lib/rack/method_override.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/sinatra-2.1.0/lib/sinatra/show_exceptions.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/rack-2.2.3/lib/rack/handler/webrick.rb
+  900  (181.1%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/webrick-1.7.0/lib/webrick/httpserver.rb
+  450  ( 90.5%) /     0  (  0.0%)   /Users/yokazaki/src/github.com/fusic/estackprof/vendor/bundle/ruby/3.0.0/gems/webrick-1.7.0/lib/webrick/server.rb
+EXPECTED
+
+      before do
+        run_command(
+          <<~CMD
+            estackprof list ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002995.dump\
+                            ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002996.dump\
+                            ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002997.dump
           CMD
         )
       end

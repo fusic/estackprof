@@ -25,6 +25,20 @@ module Estackprof
       exit(-1)
     end
 
+    desc 'list [..files]', 'Report to top of methods'
+    option :file, aliases: '-f', desc: 'Filter by file name.'
+    option :method, aliases: '-m', desc: 'Filter by method name'
+    def list(*files)
+      puts Estackprof.list(
+        files: files.empty? ? Dir.glob('./tmp/*.dump') : files,
+        options: options
+      )
+      exit
+    rescue StandardError => e
+      output_error_if_debug_mode(e)
+      exit(-1)
+    end
+
     map %w[--version -v] => :version
     desc 'version', 'version'
     def version
