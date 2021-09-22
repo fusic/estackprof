@@ -9,11 +9,9 @@ Gem::Specification.new do |spec|
   spec.email         = ['okazaki@fusic.co.jp']
 
   spec.summary       = 'We want to make stackprof easier to use.'
-  spec.description   = 'Provides commands and wrappers to handle stackprof more easily.'
+  spec.description   = 'Estackprof is a wrapper to make it easier to use Stackprof in your rack application'
   spec.homepage      = 'https://github.com/fusic/estackprof'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.7.0')
-
-  spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/fusic/estackprof'
