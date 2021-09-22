@@ -2,7 +2,7 @@
 
 require 'sinatra'
 require 'json'
-require 'estackprof'
+require_relative '../lib/estackprof'
 
 use Estackprof::Middleware
 

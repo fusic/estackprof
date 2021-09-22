@@ -39,6 +39,17 @@ module Estackprof
       exit(-1)
     end
 
+    desc 'flamegraph [..files]', 'Generate and open flamegraph'
+    def flamegraph(*files)
+      puts Estackprof.flamegraph(
+        files: files.empty? ? Dir.glob('./tmp/*.dump') : files
+      )
+      exit
+    rescue StandardError => e
+      output_error_if_debug_mode(e)
+      exit(-1)
+    end
+
     map %w[--version -v] => :version
     desc 'version', 'version'
     def version

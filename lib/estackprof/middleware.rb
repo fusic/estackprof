@@ -5,7 +5,7 @@ require 'stackprof'
 module Estackprof
   class Middleware < StackProf::Middleware
     def initialize(app)
-      super(app, enabled: true, save_every: 5)
+      super(app, enabled: true, save_every: 5, raw: true)
     end
 
     class << self
