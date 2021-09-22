@@ -4,6 +4,13 @@ require 'stackprof'
 
 module Estackprof
   class Report < StackProf::Report
+    def self.create(files)
+      reports = files.map do |file|
+        new(Marshal.load(IO.binread(file)))
+      end
+      reports.inject(:+)
+    end
+
     def print_text(limit:, pattern:, sort_by_total: false, out: $stdout)
       print_summary(out)
       print_header(out)

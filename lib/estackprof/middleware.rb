@@ -4,8 +4,12 @@ require 'stackprof'
 
 module Estackprof
   class Middleware < StackProf::Middleware
-    def initialize(app)
-      super(app, enabled: true, save_every: 5, raw: true)
+    def initialize(app, options = {})
+      options[:enabled] = true if options[:enabled].nil?
+      options[:raw] = true if options[:raw].nil?
+      options[:save_every] ||= 10
+
+      super(app, **options)
     end
 
     class << self

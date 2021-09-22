@@ -6,11 +6,9 @@ require 'estackprof'
 
 module Estackprof
   class CLI < Thor
-    class_option :help, type: :boolean, aliases: '-h', desc: 'help message.'
-    class_option :version, type: :boolean, aliases: '-v', desc: 'print version.'
     class_option :debug, type: :boolean, aliases: '-d', desc: 'debug mode'
 
-    desc 'top [..files]', 'Report to top of methods'
+    desc 'top [OPTIONS] [FILE...]', 'Report to top of methods'
     option :limit, aliases: '-l', desc: 'Limit reports.', type: :numeric
     option :pattern, aliases: '-p', desc: 'Filter reports by pattern match.'
     option :cumlative, aliases: '-c', desc: 'Sort by cumulative count.', type: :boolean
@@ -25,7 +23,7 @@ module Estackprof
       exit(-1)
     end
 
-    desc 'list [..files]', 'Report to top of methods'
+    desc 'list [OPTIONS] [FILE...]', 'Display sample counts of each line'
     option :file, aliases: '-f', desc: 'Filter by file name.'
     option :method, aliases: '-m', desc: 'Filter by method name'
     def list(*files)
@@ -39,7 +37,7 @@ module Estackprof
       exit(-1)
     end
 
-    desc 'flamegraph [..files]', 'Generate and open flamegraph'
+    desc 'flamegraph [OPTIONS] [FILE]', 'Generate and open flamegraph'
     def flamegraph(*files)
       puts Estackprof.flamegraph(
         files: files.empty? ? Dir.glob('./tmp/*.dump') : files

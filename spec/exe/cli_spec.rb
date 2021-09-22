@@ -13,15 +13,14 @@ RSpec.describe 'estackprof command', type: :aruba do
   context 'with help option' do
     expected = <<~EXPECTED
       Commands:
-        estackprof help [COMMAND]  # Describe available commands or one specific co...
-        estackprof list [..files]  # Report to top of methods
-        estackprof top [..files]   # Report to top of methods
-        estackprof version         # version
+        estackprof flamegraph [OPTIONS] [FILE]  # Generate and open flamegraph
+        estackprof help [COMMAND]               # Describe available commands or on...
+        estackprof list [OPTIONS] [FILE...]     # Display sample counts of each line
+        estackprof top [OPTIONS] [FILE...]      # Report to top of methods
+        estackprof version                      # version
 
       Options:
-        -h, [--help], [--no-help]        # help message.
-        -v, [--version], [--no-version]  # print version.
-        -d, [--debug], [--no-debug]      # debug mode
+        -d, [--debug], [--no-debug]  # debug mode
     EXPECTED
 
     before { run_command('estackprof help') }
@@ -90,14 +89,12 @@ RSpec.describe 'estackprof command', type: :aruba do
     context 'when help' do
       expected = <<~EXPECTED.chomp
         Usage:
-          estackprof top [..files]
+          estackprof top [OPTIONS] [FILE...]
 
         Options:
           -l, [--limit=N]                      # Limit reports.
           -p, [--pattern=PATTERN]              # Filter reports by pattern match.
           -c, [--cumlative], [--no-cumlative]  # Sort by cumulative count.
-          -h, [--help], [--no-help]            # help message.
-          -v, [--version], [--no-version]      # print version.
           -d, [--debug], [--no-debug]          # debug mode
 
         Report to top of methods
@@ -225,6 +222,73 @@ EXPECTED
                             ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002995.dump\
                             ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002996.dump\
                             ../../spec/fixtures/dump/list/stackprof-cpu-14645-1632002997.dump
+          CMD
+        )
+      end
+
+      it { expect(last_command_started).to be_successfully_executed }
+      it { expect(last_command_started).to have_output(expected) }
+    end
+
+    context 'when help' do
+      expected = <<~EXPECTED.chomp
+        Usage:
+          estackprof list [OPTIONS] [FILE...]
+
+        Options:
+          -f, [--file=FILE]            # Filter by file name.
+          -m, [--method=METHOD]        # Filter by method name
+          -d, [--debug], [--no-debug]  # debug mode
+
+        Display sample counts of each line
+      EXPECTED
+
+      before do
+        run_command(
+          <<~CMD
+            estackprof help list
+          CMD
+        )
+      end
+
+      it { expect(last_command_started).to be_successfully_executed }
+      it { expect(last_command_started).to have_output(expected) }
+    end
+  end
+
+  context 'when flamegraph subcommand' do
+    context 'when normal' do
+      expected = <<~EXPECTED.chomp
+        #{Dir.pwd}/tmp/aruba/tmp/flamegraph.html
+      EXPECTED
+
+      before do
+        run_command(
+          <<~CMD
+            estackprof flamegraph ../../spec/fixtures/dump/flamegraph/stackprof-cpu-85947-1632303953.dump
+          CMD
+        )
+      end
+
+      it { expect(last_command_started).to be_successfully_executed }
+      it { expect(last_command_started).to have_output(expected) }
+    end
+
+    context 'when help' do
+      expected = <<~EXPECTED.chomp
+        Usage:
+          estackprof flamegraph [OPTIONS] [FILE]
+
+        Options:
+          -d, [--debug], [--no-debug]  # debug mode
+
+        Generate and open flamegraph
+      EXPECTED
+
+      before do
+        run_command(
+          <<~CMD
+            estackprof help flamegraph
           CMD
         )
       end
