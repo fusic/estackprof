@@ -25,4 +25,4 @@ jobs:
           command: bundle exec rubocop
       - run:
           name: RSpec
-          command: bundle exec rspec
+          command: bundle exec rspec spec/lib
