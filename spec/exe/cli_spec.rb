@@ -7,7 +7,7 @@ RSpec.describe 'estackprof command', type: :aruba do
     before { run_command('estackprof v') }
 
     it { expect(last_command_started).to be_successfully_executed }
-    it { expect(last_command_started).to have_output('0.1.0') }
+    it { expect(last_command_started).to have_output('0.1.1') }
   end
 
   context 'with help option' do
